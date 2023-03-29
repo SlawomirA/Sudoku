@@ -21,7 +21,22 @@
         </developer>
     </developers>
 	<description>Projekt grupy laboratoryjnej mkw1201</description>
-	
+
+    <licenses>
+        <license>
+            <name>Beerware</name>
+            <url>https://en.wikipedia.org/wiki/Beerware</url>
+            <distribution>repo</distribution>
+            <comments>
+                /*
+                * "THE BEER-WARE LICENSE" (Revision 42):
+                * Sławomir Andrzejczak and Piotr Skrobski wrote this file. As long as you retain this notice you
+                * can do whatever you want with this stuff. If we meet some day, and you think
+                * this stuff is worth it, you can buy us a beer in return.
+                *</comments>
+        </license>
+    </licenses>
+
     <dependencies>
         <dependency>
             <groupId>org.ow2.asm</groupId>

@@ -10,9 +10,8 @@ import java.util.List;
  */
 public class BacktrackingSudokuSolver implements SudokuSolver {
     private int maxFailures = 2;
-    private static final ArrayList<Integer> allowedNumbers
-            = new ArrayList(Arrays.asList(1,2,3,4,5,6,7,8,9));
-
+    private static final List<Integer> allowedNumbers
+            = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
     @Override
     /**
