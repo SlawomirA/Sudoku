@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public class SudokuBoardTest {
     public SudokuBoardTest(){
-
+        String[] s = new String[5];
+        SudokuBoard.main(s);
     }
 
     @Test
@@ -20,7 +18,8 @@ public class SudokuBoardTest {
      */
     public void BoardSizeTest() {
         boolean result = false;
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver s = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(s);
         if(board.getBoardSize()==9 && board.getBoxSize()==3)
             result = true;
         else {
@@ -47,9 +46,39 @@ public class SudokuBoardTest {
                 {1,2,3,4,5,6,7,8,9}
         };
 
-        SudokuBoard board = new SudokuBoard(tab);
+        SudokuSolver s = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(s);
+        board.setBoard(tab);
         int rezult = board.get(2,2);
         assertEquals(3,rezult);
+
+        OutOfRangeException thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.get(-1,0),
+                "Numer kolumny < 0"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
+        thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.get(15,0),
+                "Numer kolumny > max"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
+        thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.get(0,-1),
+                "Numer wiersza<0"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
+        thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.get(0,15),
+                "Numer wiersza>max"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
 
     }
 
@@ -70,12 +99,28 @@ public class SudokuBoardTest {
                 {1,2,3,4,5,6,7,8,9}
         };
 
-        SudokuBoard board = new SudokuBoard(tab);
+        SudokuSolver s = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(s);
+        board.setBoard(tab);
         boolean rezult = false;
         int[] arr  = board.getRow(0);
         if(arr[0]==1 & arr[1]==2 & arr[2]==3 & arr[3]==4 & arr[4]==5 & arr[5]==6 & arr[6]==7 & arr[7]==8 & arr[8]==9)
              rezult = true;
         assertTrue(rezult);
+
+        OutOfRangeException thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.getRow(-1),
+                "Numer wiersza < 0"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
+        thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.getRow(15),
+                "Numer wiersza > max"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
 
     }
 
@@ -97,12 +142,29 @@ public class SudokuBoardTest {
                 {1,2,3,4,5,6,7,8,9}
         };
 
-        SudokuBoard board = new SudokuBoard(tab);
+        SudokuSolver s = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(s);
+        board.setBoard(tab);
         boolean rezult = false;
         int[] arr  = board.getCol(0);
         if(arr[0]==1 & arr[1]==1 & arr[2]==1 & arr[3]==1 & arr[4]==1 & arr[5]==1 & arr[6]==1 & arr[7]==1 & arr[8]==1)
             rezult = true;
         assertTrue(rezult);
+
+
+        OutOfRangeException thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.getCol(-1),
+                "Numer kolumny < 0"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
+        thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.getCol(15),
+                "Numer kolumny > max"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
 
     }
 
@@ -124,7 +186,9 @@ public class SudokuBoardTest {
                 {1,2,3,4,5,6,7,8,9}
         };
 
-        SudokuBoard board = new SudokuBoard(tab);
+        SudokuSolver s = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(s);
+        board.setBoard(tab);
         int rezult = 0;
         //Sprawdzenie 1 kwadratu
         int[] arr  = board.getBox(0,0);
@@ -147,6 +211,35 @@ public class SudokuBoardTest {
             rezult++;
         assertEquals(4,rezult);
 
+
+        OutOfRangeException thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.getBox(-1,0),
+                "Numer kolumny < 0"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
+        thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.getBox(15,0),
+                "Numer kolumny > max"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
+        thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.getBox(0,-1),
+                "Numer wiersza < 0"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
+        thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.getBox(0,15),
+                "Numer wiersza > max"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
     }
 
 
@@ -155,7 +248,6 @@ public class SudokuBoardTest {
      * Testuje metodę Set
      */
     public void BoardSetTest() throws OutOfRangeException {
-
         int[][] tab = { {0,2,3,4,5,6,7,8,9},
                 {1,2,3,4,5,6,7,8,9},
                 {1,2,3,4,5,6,7,8,9},
@@ -167,92 +259,103 @@ public class SudokuBoardTest {
                 {1,2,3,4,5,6,7,8,9}
         };
 
-        SudokuBoard board = new SudokuBoard(tab);
+        SudokuSolver s = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(s);
+        board.setBoard(tab);
         board.set(0,0, 1);
         int val = board.get(0,0);
         boolean rezult = val == 1 ? true : false;
         assertTrue(rezult);
 
+        OutOfRangeException thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.set(-1,0,-1),
+                "Numer kolumny < 0"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
+        thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.set(15,0,-1),
+                "Numer kolumny > max"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
+        thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.set(0,-1,-1),
+                "Numer wiersza < 0"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
+        thrown = assertThrows(
+                OutOfRangeException.class,
+                () -> board.set(0,15,-1),
+                "Numer wiersza > max"
+        );
+        assertTrue(thrown.getMessage().contains("Wrong"));
+
+    }
+
+
+    @Test
+    /**
+     * Testuje poprawność funkcji correctNumber
+     */
+    public  void CorrectNumberTest() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, OutOfRangeException {
+        //Test na wiersz/kolumnę/box który powiniene zwracać fałsz za każdym razem, więc ostatecznie fałsz
+        int[][] tab = {{1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9}
+        };
+
+        SudokuSolver s = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(s);
+        board.setBoard(tab);
+        boolean rezult = board.correctNumber(0, 0, 1);
+
+        assertFalse(rezult);
     }
 
     @Test
     /**
-     * Testuje metodę FillBoard.
+     * Testuje poprawność funkcji correct
      */
-    public void fillBoard() throws OutOfRangeException {
-        SudokuBoard b = new SudokuBoard();
-        b.fillBoard();
+    public  void CorrectTest() throws NoSuchMethodException, OutOfRangeException, InvocationTargetException, IllegalAccessException {
+        //Test polegający na sprawdzeniu, że correct na wypełnionym wierszu sudoku da fałsz.
+        int[][] tab = {{1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9}
+        };
 
-        SudokuBoard c = new SudokuBoard();
-        c.fillBoard();
+        SudokuSolver s = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(s);
+        board.setBoard(tab);
+        boolean rezult;
 
-        int[] tab;
-        int[] tab2;
 
-        for (int i = 0; i < b.getBoardSize(); i++) {
-            tab = b.getRow(0);
-            tab2 = c.getRow(0);
-//            System.out.println("i: "+i+" Tab: "+Arrays.toString(tab));
-//            System.out.println("i: "+i+" Tab2: "+Arrays.toString(tab2));
-            assertTrue(tab != tab2);
-        }
+        Method method = SudokuBoard.class.getDeclaredMethod("correct", int[].class, int.class);
+        method.setAccessible(true);
+        rezult = (boolean) method.invoke(board, board.getRow(7), 7);
+        assertFalse(rezult);
+
+        //Test sprawdzający, czy próba dodania nie istniejącej wartości do tablicy zakończy się zwróceniem True.
+        rezult = (boolean) method.invoke(board, board.getRow(8), 0);
+        assertTrue(rezult);
+
+        //
     }
-        @Test
-        /**
-         * Testuje metodę FillBoard pod względem poprawności.
-         */
-        public void fillBoardCorrectnessTest() throws OutOfRangeException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-            SudokuBoard b = new SudokuBoard();
-            b.fillBoard();
-            SudokuBacktrackingSolver s = new SudokuBacktrackingSolver(b);
-
-            Method method = SudokuBacktrackingSolver.class.getDeclaredMethod("correct", int[].class, int.class);
-            method.setAccessible(true);
-            boolean rezult;
-            int[] tab;
-
-            for (int i = 0; i < b.getBoardSize(); i++) {
-                tab = b.getCol(i);
-                assertTrue(!checkForDuplicates(tab));
-                tab = b.getRow(i);
-                assertTrue(!checkForDuplicates(tab));
-            }
-
-
-            for (int i = 0; i < b.getBoardSize(); i+=3) {
-                for (int k = 0; k < b.getBoardSize(); k+=3) {
-                    tab = b.getBox(i,k);
-//                    System.out.println("i: "+i+" k: "+k+" Tab: "+Arrays.toString(b.getBox(i,k)));
-                    assertTrue(!checkForDuplicates(tab));
-                }
-            }
-
-
-
-    }
-
-    /**
-     * Generyczna metoda do sprawdzenia duplikatów w tablicy
-     * @param array Tablica do sprawdzenia
-     * @return False jeśli nie ma duplikatów, true jak ma duplikaty
-     * @param <T> Szablon
-     */
-    private static <T> boolean checkForDuplicates(T... array)
-    {
-        // Pusty zbioru
-        Set<T> set = new HashSet<T>();
-        for (T e: array)
-        {
-            if (set.contains(e)) {      // true jeśli zawiera duplikaty
-                return true;
-            }
-            if (e != null) {            //wrzuć element do zbioru
-                set.add(e);
-            }
-        }
-        return false;                   //false jak nie znalazł duplikatów
-    }
-
-
 
 }
