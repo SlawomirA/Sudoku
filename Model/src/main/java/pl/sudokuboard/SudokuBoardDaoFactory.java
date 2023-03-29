@@ -3,7 +3,7 @@ package pl.sudokuboard;
 /**
  * Umożliwia serializację i deserializazcję sudokuBoard do i z pliku.
  */
-public class SudokuBoardDaoFactory implements SudokuBoardFactory<Dao<SudokuBoard>> {
+public class SudokuBoardDaoFactory implements SudokuBoardFactory<SudokuBoard> {
 
     /**
      * Zwraca klasę umożliwiającą serializację sudokuBoard.

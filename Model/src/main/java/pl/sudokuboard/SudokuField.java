@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 /**
  * Klasa odzwierciedlająca wartość pojedynczego pola.
  */
-public class SudokuField implements Serializable {
+public class SudokuField implements Serializable,Cloneable, Comparable<SudokuField> {
 
     private int val;
     private PropertyChangeSupport listener;
@@ -98,4 +98,16 @@ public class SudokuField implements Serializable {
                 .isEquals();
     }
 
+    @Override
+    public SudokuField clone() throws CloneNotSupportedException {
+        return (SudokuField) super.clone();
+    }
+
+    @Override
+    public int compareTo(SudokuField o) throws NullPointerException {
+        if (o == null) {
+            throw new NullPointerException();
+        }
+        return val - o.val;
+    }
 }

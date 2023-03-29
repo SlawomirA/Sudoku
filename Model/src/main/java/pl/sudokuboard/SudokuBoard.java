@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class SudokuBoard implements PropertyChangeListener, Serializable {
+public class SudokuBoard implements PropertyChangeListener, Serializable, Cloneable {
     private int boxSize = 3;
     private int boardSize = 9;
     private final SudokuField[][] board = new SudokuField[boardSize][boardSize];
@@ -29,6 +29,19 @@ public class SudokuBoard implements PropertyChangeListener, Serializable {
         }
     }
 
+    public SudokuBoard(SudokuBoard target) throws CloneNotSupportedException {
+        if (target == null) {
+            throw new CloneNotSupportedException();
+        }
+
+        this.solver = target.solver.clone();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                board[i][j] = new SudokuField(target.board[i][j].getFieldValue());
+                board[i][j].getListener().addPropertyChangeListener(this);
+            }
+        }
+    }
 
     /**
      *  Rozwiązuje board.
@@ -254,6 +267,33 @@ public class SudokuBoard implements PropertyChangeListener, Serializable {
                 .append(solver, sb.solver)
                 .append(board, sb.board)
                 .isEquals();
+    }
+
+
+    public void save(String fileName) throws Exception {
+        SudokuBoardFactory<SudokuBoard> factory = new SudokuBoardDaoFactory();
+        try (
+                FileSudokuBoardDao dao = (FileSudokuBoardDao) factory.getFileDao(fileName);
+        ) {
+            dao.write(this);
+        }
+    }
+
+    @Override
+    protected SudokuBoard clone() throws CloneNotSupportedException {
+        return new SudokuBoard(this);
+    }
+
+
+    public boolean isSolved() {
+        for (int row = 0; row < boardSize; row++) {
+            for (int col = 0; col < boardSize; col++) {
+                if (board[row][col].getFieldValue() == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public static void main(String[] args) {

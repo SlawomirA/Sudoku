@@ -2,6 +2,7 @@ package pl.sudokuboard;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -10,9 +11,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 /**
  * Klasa bazowa dla Sudoku Row,Column,Box. Zawiera listę i metodę sprawdzania poprawności pola.
  */
-public class SudokuComponent {
+public class SudokuComponent implements Cloneable {
     private final int size = 9;
-    private final List<SudokuField> fields = new ArrayList<>();
+    private  List<SudokuField> fields = new ArrayList<>();
 
     public SudokuComponent(List<SudokuField> list) {
         fields.addAll(list);
@@ -20,6 +21,10 @@ public class SudokuComponent {
 
     public int getFieldValue(int number) {
         return fields.get(number).getFieldValue();
+    }
+
+    public void setField(int fieldValue, int index) {
+        fields.get(index).setFieldValue(fieldValue);
     }
 
     public boolean verify() {
@@ -84,5 +89,15 @@ public class SudokuComponent {
         return new EqualsBuilder()
                 .append(fields, sb.fields)
                 .isEquals();
+    }
+
+    @Override
+    protected SudokuComponent clone() throws CloneNotSupportedException {
+        SudokuComponent element = (SudokuComponent) super.clone();
+        element.fields = Arrays.asList(new SudokuField[size]);
+        for (int i = 0; i < size; i++) {
+            element.fields.set(i, new SudokuField(fields.get(i).getFieldValue()));
+        }
+        return element;
     }
 }

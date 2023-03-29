@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Klasa odpowiadająca za rozwiązanie sudoku algorytmem z użyciem backtrackingu.
  */
-public class BacktrackingSudokuSolver implements SudokuSolver {
+public class BacktrackingSudokuSolver implements SudokuSolver, Cloneable {
     private int maxFailures = 2;
     private static final List<Integer> allowedNumbers
             = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
@@ -116,5 +116,10 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
 
         return new EqualsBuilder()
                 .isEquals();
+    }
+
+    @Override
+    public BacktrackingSudokuSolver clone() throws CloneNotSupportedException {
+        return (BacktrackingSudokuSolver) super.clone();
     }
 }

@@ -9,4 +9,9 @@ public class SudokuBox extends SudokuComponent {
     public SudokuBox(List<SudokuField> list) {
         super(list);
     }
+
+    @Override
+    protected SudokuBox clone() throws CloneNotSupportedException {
+        return (SudokuBox) super.clone();
+    }
 }

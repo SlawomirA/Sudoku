@@ -5,7 +5,8 @@ import java.util.Random;
 public class GameLevel {
 
 
-    public static void setLevel(SudokuBoard board, GameDifficultyLevel level) throws OutOfRangeException {
+    public static void setLevel(SudokuBoard board, GameDifficultyLevel level)
+            throws OutOfRangeException {
         if (!board.isSolved()) {
             board.solveGame();
         }

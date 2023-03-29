@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -276,5 +277,67 @@ public class SudokuBoardTest {
         assertEquals(board, board);
         assertEquals(board, board2);
         assertEquals(board, board3);
+    }
+
+    @Test
+    public void saveTest() throws OutOfRangeException {
+        String path = "Test.txt";
+        File test = new File(path);
+        SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
+        board.solveGame();
+
+        assertFalse(test.exists());
+        try {
+            board.save(path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue(test.exists());
+
+        test.delete();
+    }
+
+    @Test
+    void isSolved() throws OutOfRangeException {
+        SudokuBoard f1 = new SudokuBoard(new BacktrackingSudokuSolver());
+        SudokuBoard f2 = new SudokuBoard(new BacktrackingSudokuSolver());
+        SudokuBoard f3 = new SudokuBoard(new BacktrackingSudokuSolver());
+        f1.solveGame();
+        f2.solveGame();
+
+        assertTrue(f1.isSolved());
+        assertTrue(f2.isSolved());
+        assertFalse(f3.isSolved());
+
+        f2.set(1, 1, 0);
+        assertFalse(f2.isSolved());
+    }
+
+    @Test
+    void testClone() throws OutOfRangeException {
+        SudokuBoard f1 = new SudokuBoard(new BacktrackingSudokuSolver());
+        SudokuBoard f2 = new SudokuBoard(new BacktrackingSudokuSolver());
+        f1.solveGame();
+        f2.solveGame();
+
+        try {
+            SudokuBoard fc1 = f1.clone();
+            SudokuBoard fc2 = f2.clone();
+            assertEquals(f1, fc1);
+            assertEquals(f2, fc2);
+
+            assertNotEquals(f1, fc2);
+            assertNotEquals(f2, fc1);
+
+            fc1.set(1, 1, -1);
+            fc2.set(3, 1, -1);
+            assertNotEquals(f1, fc1);
+            assertNotEquals(f2, fc2);
+
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        SudokuBoard empty = null;
+        assertThrows(CloneNotSupportedException.class, ()->{new SudokuBoard(empty);});
     }
 }

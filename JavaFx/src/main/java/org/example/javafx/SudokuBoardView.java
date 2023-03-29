@@ -4,6 +4,7 @@
 
 package org.example.javafx;
 
+import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -18,8 +19,6 @@ import pl.sudokuboard.GameDifficultyLevel;
 import pl.sudokuboard.GameLevel;
 import pl.sudokuboard.OutOfRangeException;
 import pl.sudokuboard.SudokuBoard;
-
-import java.io.IOException;
 
 public class SudokuBoardView {
     private final Stage stage;
