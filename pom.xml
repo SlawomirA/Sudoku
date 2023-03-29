@@ -27,13 +27,7 @@
             <name>Beerware</name>
             <url>https://en.wikipedia.org/wiki/Beerware</url>
             <distribution>repo</distribution>
-            <comments>
-                /*
-                * "THE BEER-WARE LICENSE" (Revision 42):
-                * Sławomir Andrzejczak and Piotr Skrobski wrote this file. As long as you retain this notice you
-                * can do whatever you want with this stuff. If we meet some day, and you think
-                * this stuff is worth it, you can buy us a beer in return.
-                *</comments>
+            <comments>For project</comments>
         </license>
     </licenses>
 
@@ -59,6 +53,12 @@
             <artifactId>testng</artifactId>
             <version>7.6.1</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+            <!--Uses Apache 2.0 License: http://www.apache.org/licenses/LICENSE-2.0.html -->
         </dependency>
     </dependencies>
 

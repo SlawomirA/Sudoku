@@ -1,6 +1,10 @@
 package pl.sudokuboard;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -20,7 +24,7 @@ public class SudokuBoardTest {
     /**
      * Testuje stworzenie obiektu board i sprawdza poprawność jego rozmiarów.
      */
-    public void BoardSizeTest() {
+    public void boardSizeTest() {
         boolean result = false;
         SudokuSolver s = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(s);
@@ -37,7 +41,7 @@ public class SudokuBoardTest {
     /**
      * Testuje metodę Get
      */
-    public void BoardGetTest() throws OutOfRangeException {
+    public void boardGetTest() throws OutOfRangeException {
         ArrayList<Integer> ints = new ArrayList<>(Arrays.asList(9,7,8,6,5,4,3,2,1));
         ArrayList<SudokuField> tab = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
@@ -90,7 +94,7 @@ public class SudokuBoardTest {
     /**
      * Testuje metodę GetRow
      */
-    public void BoardGetRowTest() throws OutOfRangeException {
+    public void boardGetRowTest() throws OutOfRangeException {
 
         SudokuSolver s = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(s);
@@ -111,7 +115,7 @@ public class SudokuBoardTest {
     /**
      * Testuje metodę GetCol
      */
-    public void BoardGetColTest() throws OutOfRangeException {
+    public void boardGetColTest() throws OutOfRangeException {
 
         SudokuSolver s = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(s);
@@ -129,7 +133,7 @@ public class SudokuBoardTest {
     /**
      * Testuje metodę GetBox
      */
-    public void BoardGetBoxTest() throws OutOfRangeException {
+    public void boardGetBoxTest() throws OutOfRangeException {
 
 
         SudokuSolver s = new BacktrackingSudokuSolver();
@@ -155,7 +159,7 @@ public class SudokuBoardTest {
     /**
      * Testuje metodę Set
      */
-    public void BoardSetTest() throws OutOfRangeException {
+    public void boardSetTest() throws OutOfRangeException {
 
 
         SudokuSolver s = new BacktrackingSudokuSolver();
@@ -172,7 +176,7 @@ public class SudokuBoardTest {
     /**
      * Testuje poprawność funkcji correctNumber
      */
-    public  void CorrectNumberTest() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, OutOfRangeException {
+    public  void correctNumberTest() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, OutOfRangeException {
 
         SudokuSolver s = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(s);
@@ -187,7 +191,7 @@ public class SudokuBoardTest {
     /**
      * Testuje poprawność funkcji correct
      */
-    public  void CorrectTest() throws NoSuchMethodException, OutOfRangeException, InvocationTargetException, IllegalAccessException {
+    public  void correctTest() throws NoSuchMethodException, OutOfRangeException, InvocationTargetException, IllegalAccessException {
         ArrayList<SudokuField> fields = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
             fields.add(i,new SudokuField(i));
@@ -205,7 +209,7 @@ public class SudokuBoardTest {
     }
 
     @Test
-    public void ObserverTest() throws OutOfRangeException {
+    public void observerTest() throws OutOfRangeException {
         BacktrackingSudokuSolver solver = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(solver);
         board.solveGame();
@@ -214,4 +218,63 @@ public class SudokuBoardTest {
         assertEquals(value, board.get(0, 0));
     }
 
+
+    @Test
+    public void toStringTest() throws NoSuchFieldException, IllegalAccessException {
+        SudokuSolver s = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(s);
+
+        Field roflField = SudokuBoard.class.getDeclaredField("board");
+        roflField.setAccessible(true);
+
+        SudokuField[][] f = (SudokuField[][]) roflField.get(board);
+
+        String expected = new ToStringBuilder(board)
+            .append("boardSize", board.getBoardSize())
+            .append("boxSize", board.getBoxSize())
+            .append("solver", s)
+            .append("board", f)
+            .toString();
+        assertEquals(expected, board.toString());
+
+    }
+
+    @Test
+    public void hashCodeTest()
+    {
+        SudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuSolver solver2 = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(solver);
+        SudokuBoard board2 = new SudokuBoard(solver);
+        SudokuBoard board3 = new SudokuBoard(solver2);
+
+        int expected = new HashCodeBuilder(11, 31)
+                .append(board.getBoardSize())
+                .append(board.getBoxSize())
+                .append(solver)
+                .append(new SudokuField[9][9])
+                .toHashCode();
+        assertNotEquals(expected, board.hashCode());
+        assertEquals(board2.hashCode(), board.hashCode());
+        assertEquals(board.hashCode(), board.hashCode());
+        assertNotEquals(board.hashCode(), board3.hashCode());
+    }
+
+    @Test
+    public void equalsTest()
+    {
+        SudokuSolver solver = new BacktrackingSudokuSolver();
+        SudokuSolver solver2 = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(solver);
+        SudokuBoard board2 = new SudokuBoard(solver);
+        SudokuBoard board3 = new SudokuBoard(solver2);
+
+        assertNotEquals(null, board2);
+        assertNotEquals(board2, null);
+        assertNotEquals(board, solver);
+        assertNotEquals(solver, board);
+        assertEquals(board, board);
+        assertEquals(board, board2);
+        assertNotEquals(board, board3);
+    }
 }

@@ -17,7 +17,7 @@ public class BacktrackingSudokuSolverTest {
     /**
      * Testuje poprawność funkcji CleanRow
      */
-    public void CleanRowTest() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException, OutOfRangeException {
+    public void cleanRowTest() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException, OutOfRangeException {
 
         SudokuSolver s = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(s);
@@ -42,7 +42,7 @@ public class BacktrackingSudokuSolverTest {
     /**
      * Testuje funkcję generateNumbers
      */
-    public void GenerateNumbersTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void generateNumbersTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         //Sprawdzanie czy lista nie jest pusta
         boolean rezult = true;
 
@@ -82,7 +82,7 @@ public class BacktrackingSudokuSolverTest {
     /**
      * Testuje funkcję solve row
      */
-    public void SolveRowTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, OutOfRangeException {
+    public void solveRowTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, OutOfRangeException {
 
         BacktrackingSudokuSolver s = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(s);
@@ -105,7 +105,7 @@ public class BacktrackingSudokuSolverTest {
     }
 
     @Test
-    public void SolveTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, OutOfRangeException {
+    public void solveTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, OutOfRangeException {
         //Test czy działa samo wypełnianie tablicy
         BacktrackingSudokuSolver s = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(s);

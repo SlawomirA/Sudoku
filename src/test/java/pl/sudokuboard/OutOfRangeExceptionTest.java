@@ -13,7 +13,7 @@ public class OutOfRangeExceptionTest {
     OutOfRangeExceptionTest() {}
 
     @Test
-    public void OutOfRangeExceptionTestOne() {
+    public void outOfRangeExceptionTestOne() {
         SudokuBoard b = new SudokuBoard(new BacktrackingSudokuSolver());
         OutOfRangeException thrown = assertThrows(
                 OutOfRangeException.class,

@@ -1,6 +1,10 @@
 package pl.sudokuboard;
 
+
 import java.beans.PropertyChangeSupport;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Klasa odzwierciedlająca wartość pojedynczego pola.
@@ -47,4 +51,51 @@ public class SudokuField {
     public PropertyChangeSupport getListener() {
         return listener;
     }
+
+    /**
+     * Zwraca obiekt w postaci łańcucha znaków.
+     *
+     * @return Obiekt w postaci łańcucha znaków.
+     */
+    public final String toString() {
+        return new ToStringBuilder(this)
+                .append("value", val)
+                .toString();
+    }
+
+    /**
+     * Służy do zwrócenia (w miarę)
+     * unikalnej wartości liczbowej typu int dla każdego unikalnego obiektu.
+     * Jeśli dwa obiekty, których
+     * porównanie przy pomocy metody equals() zwraca true, to metoda hashCode()
+     * powinna zwracać dla tych obiektów taką samą wartość.
+     *
+     * @return Unikalna liczba dla tego obiektu.
+     */
+    public int hashCode() {
+        return new HashCodeBuilder(13, 37)
+                .append(val)
+                .toHashCode();
+    }
+
+    /**
+     * Sprawdza, czy podany obiekt jest równy temu obiektowi.
+     *
+     * @param obj Obiekt do porównania.
+     * @return True, jeśli obiekt jest ten sam.
+     */
+    public boolean equals(final Object obj) {
+        if (obj == null || obj.getClass() != getClass())  {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+
+        SudokuField sb = (SudokuField) obj;
+        return new EqualsBuilder()
+                .append(val, sb.val)
+                .isEquals();
+    }
+
 }
