@@ -1,27 +1,39 @@
 package pl.sudokuboard;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class SudokuBoard {
+public class SudokuBoard implements PropertyChangeListener {
     private int boxSize = 3;
     private int boardSize = 9;
-    private int[][] board = new int[boardSize][boardSize];
+    private final SudokuField[][] board = new SudokuField[boardSize][boardSize];
     private final SudokuSolver solver;
+    private final PropertyChangeSupport propertyChangeSupp = new PropertyChangeSupport(this);
 
     public SudokuBoard(SudokuSolver solver) {
         this.solver = solver;
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                board[i][j] = new SudokuField();
+                board[i][j].getListener().addPropertyChangeListener(this);
+            }
+        }
     }
 
+
     /**
-     * Rozwiązuje tablicę Sudoku.
+     *  Rozwiązuje board.
      * @throws OutOfRangeException Wyjątek poza zakresem.
      */
     public void solveGame() throws OutOfRangeException {
         this.solver.solve(this);
-    }
+        propertyChangeSupp.addPropertyChangeListener(this);
 
-    public void setBoard(int[][] tab) {
-        board = tab;
     }
 
 
@@ -58,41 +70,31 @@ public class SudokuBoard {
             throw new OutOfRangeException("Wrong row value: " + row
                     + ". Use values between 0 and " + boardSize + ".");
         }
-        return board[col][row];
+        return board[col][row].getFieldValue();
     }
 
     /**
      * Zwraca konkretną kolumnę.
      * @param value Index wiersza.
-     * @return int[] Zwraca kopię oryginalnej tablicy
-     *          rozszerzoną/przyciętą do zadanego rozmiaru (boardSize).
-     * @throws OutOfRangeException Index wiersza poza zakresem/poza rozmiarem planszy.
+     * @return int[] Zwraca kopię oryginalnej
+     *          tablicy rozszerzoną/przyciętą do zadanego rozmiaru (boardSize).
      */
-    public int[] getRow(int value) throws OutOfRangeException {
-        if (value < 0 || value >= boardSize) {
-            throw new OutOfRangeException("Wrong row value: "
-                    + value + ". Use values between 0 and " + boardSize + ".");
-        }
-        return Arrays.copyOf(board[value],boardSize);
+    public SudokuRow getRow(int value) {
+        return new SudokuRow(Arrays.asList(board[value]).subList(0, boardSize));
     }
 
     /**
      * Zwraca tablicę zawierającą zawartości z danej kolumny.
+     *
      * @param value Index danej kolumny.
      * @return int[], wypełniona wartościami z danej kolumny.
-     * @throws OutOfRangeException Index kolumny poza zakresem/poza rozmiarem planszy.
      */
-    public int[] getCol(int value) throws OutOfRangeException {
-        if (value < 0 || value >= boardSize) {
-            throw new OutOfRangeException("Wrong col value: "
-                    + value + ". Use values between 0 and " + boardSize + ".");
-        }
-
-        int[] result = new int[boardSize];
+    public SudokuColumn getCol(int value) {
+        List<SudokuField> list = new ArrayList<>();
         for (int i = 0; i < boardSize; i++) {
-            result[i] = board[i][value];
+            list.add(board[i][value]);
         }
-        return result;
+        return new SudokuColumn(list);
     }
 
     /**
@@ -100,40 +102,55 @@ public class SudokuBoard {
      * @param col Index kolumny.
      * @param row Index wiersza.
      * @return Tablica[], wypełniona wartościami z konkretnego boxa 3x3.
-     * @throws OutOfRangeException  Index kolumny/wiersza poza zakresem/poza rozmiarem planszy.
      */
-    public int[] getBox(int col, int row) throws OutOfRangeException {
-        if (col < 0 || col >= boardSize || row < 0 || row >= boardSize) {
-            throw new OutOfRangeException("Wrong position on board: " + row + "," + col
-                    + ". Please use numbers from 0 to: " + (boardSize - 1) + ".");
-        }
+    public SudokuBox getBox(int row, int col) {
+        col = col / boxSize;
+        row = row / boxSize;
+        List<SudokuField> list = new ArrayList<>();
 
-        col = col / boxSize;        // /3 żeby wziąć index konkretnego kwadratu 3x3 czyli 0 1 2
-        row = row / boxSize;        // /3 żeby wziąć index konkretnego kwadratu 3x3 czyli 0 1 2
-        int[] box = new int[boxSize * boxSize]; // tablica  9 elementów czyli tyle ile ma kwadrat
-        for (int i = 0; i < boxSize; i++) {     //Wypełnia nowo stworzoną tablicę a potem ją zwraca
+        for (int i = 0; i < boxSize; i++) {
             for (int j = 0; j < boxSize; j++) {
-                box[i * boxSize + j] = board[i + row * boxSize][j + col * boxSize];
+                int r = boxSize * row + i;
+                int c = col * boxSize + j;
+                list.add(board[r][c]);
             }
         }
-
-        return box;
+        return new SudokuBox(list);
     }
+
+    private boolean checkBoard() {
+
+        boolean result = true;
+        for (int row = 0; row < boardSize; row++) {
+            SudokuRow r = getRow(row);
+            result &= r.verify();
+        }
+
+        for (int col = 0; col < boardSize; col++) {
+            SudokuColumn c = getCol(col);
+            result &= c.verify();
+        }
+
+
+        for (int row = 0; row < boxSize; row++) {
+            for (int col = 0; col < boxSize; col++) {
+                SudokuBox b = getBox(row * 3, col * 3);
+                result &= b.verify();
+            }
+        }
+        return result;
+    }
+
 
     /**
      * Zmienia wartość podanego pola.
      * @param col Index kolumny.
      * @param row Index wiersza.
      * @param value Wartość pola.
-     * @throws OutOfRangeException Index kolumny/wiersza poza zakresem/poza rozmiarem planszy
+     * @throws OutOfRangeException Wyjątek poza zakresem.
      */
     public void set(int row, int col, int value) throws OutOfRangeException {
-        if (row < 0 || row >= boardSize || col < 0 || col >= boardSize) {
-            throw new OutOfRangeException("Wrong position on board: row: "
-                    + row + ". Col: " + col + ". Use values between 0 and "
-                    + (boardSize - 1) + ".");
-        }
-        board[row][col] = value;
+        board[row][col].setFieldValue(value);
     }
 
     /**
@@ -142,34 +159,45 @@ public class SudokuBoard {
      * @param row Index wiersza.
      * @param value Wartość, którą należy sprawdzić.
      * @return True/False w zależności czy wartość jest poprawna w wierszu kolumnie i boxie 3x3.
-     * @throws OutOfRangeException Index kolumny/wiersza poza zakresem.
+     * @throws OutOfRangeException Wyjątek poza zakresem.
      */
     public boolean correctNumber(int col, int row, int value) throws OutOfRangeException {
-        return correct(getCol(col),value)
-                && correct(getRow(row),value)
-                && correct(getBox(col,row),value);
+        boolean result = correct(getCol(col), value);
+        result &= correct(getRow(row), value);
+        result &= correct(getBox(row, col), value);
+        return result;
     }
+
 
     /**
      * Sprawdzanie poprawności (w tablicy nie może występować wartość którą chcemy wstawić).
-     * @param tab Tablica zawierająca wartości z kolumny/wiersza/boxa 3x3
+     * @param component Element tablicy
      * @param value Wartość do sprawdzenia.
      * @return True/False
      */
-    private boolean correct(int[] tab, int value) {
-        for (int i = 0;i < getBoardSize();i++) {
-            if (tab[i] == value) {
+    private boolean correct(SudokuComponent component, int value) {
+        for (int i = 0; i < boardSize; i++) {
+            if (component.getFieldValue(i) == value) {
                 return false;
-            } else if (tab[i] == 0) {
-                break;
             }
         }
         return true;
     }
 
+    /**
+     * Funkcja wywoływana w przypadku spełnienia warunków obserwatora (zmiana jest niepoprawna).
+     *
+     * @param evt Obiekt z informacjami o zmianie pola.
+     */
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (!checkBoard()) {
+            ((SudokuField) evt.getNewValue())
+                    .setFieldValue(((SudokuField) evt.getOldValue()).getFieldValue());
+        }
+    }
 
     public static void main(String[] args) {
-        SudokuBoard b;
     }
 
 }

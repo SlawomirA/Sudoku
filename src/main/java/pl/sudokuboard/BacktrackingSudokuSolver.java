@@ -9,7 +9,6 @@ import java.util.List;
  * Klasa odpowiadająca za rozwiązanie sudoku algorytmem z użyciem backtrackingu.
  */
 public class BacktrackingSudokuSolver implements SudokuSolver {
-
     private int maxFailures = 2;
     private static final ArrayList<Integer> allowedNumbers
             = new ArrayList(Arrays.asList(1,2,3,4,5,6,7,8,9));
@@ -35,12 +34,12 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
         }
     }
 
+
     /**
      * Czyści wiersz.
      *
-     * @param board Board do wyczyszczenia
+     * @param board Board do wyczyszczenia.
      * @param row   Index wiersza
-     * @throws OutOfRangeException Index wiersza poza zakresem.
      */
     private void cleanRow(SudokuBoard board, int row) throws OutOfRangeException {
         for (int i = 0; i < board.getBoardSize();i++) {
@@ -51,9 +50,8 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
     /**
      * Rozwiązuje wiersz idąc po kolumnach należących do tego wiersza metodą backtrackingu.
      * @param row Index wiersza
-     * @return True/False w zależności czy udało się
-     *          rozwiązać wiersz w pewnej skończonej liczbie kroków.
-     * @throws OutOfRangeException Index wiersza poza zakresem.
+     * @return True/False w zależności czy udało się rozwiązać
+     *      wiersz w pewnej skończonej liczbie kroków.
      */
     private boolean solveRow(SudokuBoard board, int row) throws OutOfRangeException {
         List<Integer> currentNumbers = generateNumbers();
@@ -88,8 +86,8 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
      * Losuje kolejność liczb 0-9 z listy.
      * @return Lista z pomieszanymi wartościami
      */
-    private List<Integer> generateNumbers() {
-        List<Integer> list = (List<Integer>) allowedNumbers.clone();
+    private ArrayList<Integer> generateNumbers() {
+        ArrayList<Integer> list = new ArrayList<>(allowedNumbers);
         Collections.shuffle(list);
         return list;
     }

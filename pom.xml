@@ -8,7 +8,26 @@
     <artifactId>startowy</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <developers>
+        <developer>
+            <id>sAndrzejczak</id>
+            <name>Sławomir Andrzejczak</name>
+            <email>242349@edu.p.lodz.pl</email>
+        </developer>
+        <developer>
+            <id>pSkrobski</id>
+            <name>Piotr Skrobski</name>
+            <email>242349@edu.p.lodz.pl</email>
+        </developer>
+    </developers>
+	<description>Projekt grupy laboratoryjnej mkw1201</description>
+	
     <dependencies>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>9.2</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -62,6 +81,11 @@
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
                         <version>10.0</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>9.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -126,6 +150,16 @@
 
     <reporting>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>3.3.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.19.0</version>
+            </plugin>
             <plugin>
                 <!-- 3.4.1 zamiast 3.1.1 -->
                 <groupId>org.apache.maven.plugins</groupId>

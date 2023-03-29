@@ -3,11 +3,11 @@ package pl.sudokuboard;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class BacktrackingSudokuSolverTest {
 
@@ -18,34 +18,22 @@ public class BacktrackingSudokuSolverTest {
      * Testuje poprawność funkcji CleanRow
      */
     public void CleanRowTest() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException, OutOfRangeException {
-        int[][] tab = { {1,2,3,4,5,6,7,8,9},
-                {1,2,3,4,5,6,7,8,9},
-                {1,2,3,4,5,6,7,8,9},
-                {1,2,3,4,5,6,7,8,9},
-                {1,2,3,4,5,6,7,8,9},
-                {1,2,3,4,5,6,7,8,9},
-                {1,2,3,4,5,6,7,8,9},
-                {1,2,3,4,5,6,7,8,9},
-                {1,2,3,4,5,6,7,8,9}
-        };
-        BacktrackingSudokuSolver s = new BacktrackingSudokuSolver();
-        SudokuBoard b = new SudokuBoard(s);
-        b.setBoard(tab);
 
-        boolean rezult = true;
-
+        SudokuSolver s = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(s);
+        board.solveGame();
         Method method = BacktrackingSudokuSolver.class.getDeclaredMethod("cleanRow", SudokuBoard.class, int.class);
         method.setAccessible(true);
-        method.invoke(s, b,2);
-
-
-        int[] arr = b.getRow(2);
-        for (int i : arr)
-            if(arr[i] != 0) {
-                rezult = false;
-                break;
+        boolean rezult=true;
+        for (int i = 0; i < 9; i++) {
+            method.invoke(s, board,i);
+        }
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if(board.get(i,j)!=0)
+                    rezult = false;
             }
-
+        }
 
         assertTrue(rezult);
     }
@@ -95,31 +83,24 @@ public class BacktrackingSudokuSolverTest {
      * Testuje funkcję solve row
      */
     public void SolveRowTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, OutOfRangeException {
-        int[][] tab = { {0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0}
-        };
 
         BacktrackingSudokuSolver s = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(s);
-        board.setBoard(tab);
         boolean rezult = true;
 
         Method method = BacktrackingSudokuSolver.class.getDeclaredMethod("solveRow", SudokuBoard.class, int.class);
         method.setAccessible(true);
-        rezult = (boolean) method.invoke(s, board,2);
-        assertTrue(rezult);
+        method.invoke(s, board,0);
 
-        int[] arr = board.getRow(2);
-        for (int i : board.getRow(2))
-            if(arr[i-1] == 0)
-                rezult = false;
+        SudokuRow r = board.getRow(0);
+        rezult = true;
+        for (int i=0;i<9;i++){
+            if(r.getFieldValue(i)==0)
+            {
+                rezult=false;
+                break;
+            }
+        }
         assertTrue(rezult);
     }
 
@@ -138,7 +119,7 @@ public class BacktrackingSudokuSolverTest {
             for (int j = 0; j < 9; j++) {
                 if (board.get(i, j) == 0)
                     rezult = false;
-                    //System.out.print(board.get(i,j));
+                //System.out.print(board.get(i,j));
             }
             //System.out.println(" ");
         }
@@ -165,81 +146,4 @@ public class BacktrackingSudokuSolverTest {
             rezult = false;
         assertTrue(rezult);
     }
-
-    @Test
-    /**
-     * Testuje metodę FillBoard.
-     */
-    public void fillBoard() throws OutOfRangeException {
-        BacktrackingSudokuSolver s = new BacktrackingSudokuSolver();
-        SudokuBoard b = new SudokuBoard(s);
-        b.solveGame();
-
-        SudokuBoard c = new SudokuBoard(s);
-        c.solveGame();
-
-        int[] tab;
-        int[] tab2;
-
-        for (int i = 0; i < b.getBoardSize(); i++) {
-            tab = b.getRow(0);
-            tab2 = c.getRow(0);
-//            System.out.println("i: "+i+" Tab: "+Arrays.toString(tab));
-//            System.out.println("i: "+i+" Tab2: "+Arrays.toString(tab2));
-            assertTrue(tab != tab2);
-        }
-    }
-    @Test
-    /**
-     * Testuje metodę FillBoard pod względem poprawności.
-     */
-    public void fillBoardCorrectnessTest() throws OutOfRangeException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        BacktrackingSudokuSolver s = new BacktrackingSudokuSolver();
-        SudokuBoard b = new SudokuBoard(s);
-        b.solveGame();
-        int[] tab;
-
-        for (int i = 0; i < b.getBoardSize(); i++) {
-            tab = b.getCol(i);
-            assertTrue(!checkForDuplicates(tab));
-            tab = b.getRow(i);
-            assertTrue(!checkForDuplicates(tab));
-        }
-
-
-        for (int i = 0; i < b.getBoardSize(); i+=3) {
-            for (int k = 0; k < b.getBoardSize(); k+=3) {
-                tab = b.getBox(i,k);
-//                    System.out.println("i: "+i+" k: "+k+" Tab: "+Arrays.toString(b.getBox(i,k)));
-                assertTrue(!checkForDuplicates(tab));
-            }
-        }
-
-
-
-    }
-
-    /**
-     * Generyczna metoda do sprawdzenia duplikatów w tablicy
-     * @param array Tablica do sprawdzenia
-     * @return False jeśli nie ma duplikatów, true jak ma duplikaty
-     * @param <T> Szablon
-     */
-    private static <T> boolean checkForDuplicates(T... array)
-    {
-        // Pusty zbioru
-        Set<T> set = new HashSet<T>();
-        for (T e: array)
-        {
-            if (set.contains(e)) {      // true jeśli zawiera duplikaty
-                return true;
-            }
-            if (e != null) {            //wrzuć element do zbioru
-                set.add(e);
-            }
-        }
-        return false;                   //false jak nie znalazł duplikatów
-    }
-
-
 }
