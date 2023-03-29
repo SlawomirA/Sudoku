@@ -6,23 +6,34 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="490.0" prefWidth="694.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Label fx:id="title" layoutX="50.0" prefHeight="75.0" prefWidth="750.0" text="Sudoku Master" textAlignment="CENTER" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
-         <font>
-            <Font size="50.0" />
-         </font>
-      </Label>
-      <Label layoutX="25.0" layoutY="204.0" text="Poziom trudności:" AnchorPane.leftAnchor="25.0">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="levelComboBox" layoutX="232.0" layoutY="210.0" prefWidth="150.0" promptText="Wybierz poziom:" />
-      <Button fx:id="gameStartButton" layoutX="469.0" layoutY="371.0" mnemonicParsing="false" text="Rozpocznij Grę" AnchorPane.bottomAnchor="67.0" AnchorPane.rightAnchor="25.799999999999955">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Button>
-   </children>
+<AnchorPane fx:id="pane" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label fx:id="title" layoutX="50.0" prefHeight="75.0" prefWidth="750.0" text="%MainWindow.Title" textAlignment="CENTER" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+            <font>
+                <Font size="50.0" />
+            </font>
+        </Label>
+      <AnchorPane fx:id="optionPane" layoutX="14.0" layoutY="194.0" prefHeight="102.0" prefWidth="373.0">
+         <children>
+              <Label layoutX="8.0" layoutY="8.0" text="%MainWindow.DifficultyLevel">
+                  <font>
+                      <Font size="25.0" />
+                  </font>
+              </Label>
+              <ComboBox fx:id="levelComboBox" layoutX="215.0" layoutY="14.0" prefWidth="150.0" promptText="%MainWindow.ChooseLevel" />
+              <Label layoutX="8.0" layoutY="58.0" text="%MainWindow.Language">
+                  <font>
+                      <Font size="25.0" />
+                  </font>
+              </Label>
+              <ComboBox fx:id="languageComboBox" layoutX="215.0" layoutY="64.0" prefWidth="150.0" promptText="%MainWindow.ChooseLanguage" />
+         </children>
+      </AnchorPane>
+        <Button fx:id="gameStartButton" layoutX="664.0" layoutY="713.0" mnemonicParsing="false" text="%MainWindow.StartGame" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="25.0">
+            <font>
+                <Font size="25.0" />
+            </font>
+        </Button>
+        <Button fx:id="authorsButton" layoutX="14.0" layoutY="650.0" mnemonicParsing="false" text="%MainWindow.Authors" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
+    </children>
 </AnchorPane>

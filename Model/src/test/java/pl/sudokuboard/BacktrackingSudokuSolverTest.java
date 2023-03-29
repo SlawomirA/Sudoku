@@ -2,6 +2,7 @@ package pl.sudokuboard;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import pl.sudokuboard.exception.InvalidIndex;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -17,7 +18,7 @@ public class BacktrackingSudokuSolverTest {
     /**
      * Testuje poprawność funkcji CleanRow
      */
-    public void cleanRowTest() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException, OutOfRangeException {
+    public void cleanRowTest() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InvalidIndex {
 
         SudokuSolver s = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(s);
@@ -68,7 +69,6 @@ public class BacktrackingSudokuSolverTest {
         for (int i : k)
             if(k.get(i-1) != j.get(i-1)) {
                 rozne = true;
-                //System.out.println(k.get(i-1) + "  " +  j.get(i-1)); //Wypisywanie tych tablic
             }
         if(!rozne)
             rezult=false;
@@ -119,9 +119,7 @@ public class BacktrackingSudokuSolverTest {
             for (int j = 0; j < 9; j++) {
                 if (board.get(i, j) == 0)
                     rezult = false;
-                //System.out.print(board.get(i,j));
             }
-            //System.out.println(" ");
         }
         assertTrue(rezult);
 
@@ -137,10 +135,8 @@ public class BacktrackingSudokuSolverTest {
             for (int j = 0; j < 9; j++) {
                 if (board.get(i, j) != board2.get(i, j)) {
                     different = true;
-                    //System.out.print(board.get(i,j) + " " + board2.get(i,j) + "\n");
                 }
             }
-            //System.out.println("");
         }
         if(!different)
             rezult = false;

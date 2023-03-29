@@ -1,6 +1,8 @@
 package pl.sudokuboard;
 
 import java.util.List;
+import pl.sudokuboard.exception.CloneException;
+
 
 /**
  * Klasa będąca odzwierciedleniem kolumny, korzysta z klasy bazowej Component.
@@ -12,7 +14,7 @@ public class SudokuColumn extends SudokuComponent {
 
 
     @Override
-    protected SudokuColumn clone() throws CloneNotSupportedException {
+    protected SudokuColumn clone() throws CloneException {
         return (SudokuColumn) super.clone();
     }
 }

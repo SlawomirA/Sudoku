@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.jupiter.api.Test;
+import pl.sudokuboard.exception.InvalidIndex;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -32,7 +33,6 @@ public class SudokuBoardTest {
         if(board.getBoardSize()==9 && board.getBoxSize()==3)
             result = true;
         else {
-            System.out.println("Stworzony board nie ma poprawnych rozmiarów");
             result = false;
         }
         assertTrue(result);
@@ -57,37 +57,36 @@ public class SudokuBoardTest {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 board.set(i, j,j+1);
-                //System.out.println(String.format("%d => %d", j+1, board.get(j, i)));
             }
         }
 
-        OutOfRangeException thrown = assertThrows(
-                OutOfRangeException.class,
+        InvalidIndex thrown = assertThrows(
+                InvalidIndex.class,
                 () -> board.get(-1,0),
                 "Numer kolumny < 0"
         );
-        assertTrue(thrown.getMessage().contains("Wrong"));
+        assertTrue(thrown.getMessage().length()>0);
 
         thrown = assertThrows(
-                OutOfRangeException.class,
+                InvalidIndex.class,
                 () -> board.get(15,0),
                 "Numer kolumny > max"
         );
-        assertTrue(thrown.getMessage().contains("Wrong"));
+        assertTrue(thrown.getMessage().length()>0);
 
         thrown = assertThrows(
-                OutOfRangeException.class,
+                InvalidIndex.class,
                 () -> board.get(0,-1),
                 "Numer wiersza<0"
         );
-        assertTrue(thrown.getMessage().contains("Wrong"));
+        assertTrue(thrown.getMessage().length()>0);
 
         thrown = assertThrows(
-                OutOfRangeException.class,
+                InvalidIndex.class,
                 () -> board.get(0,15),
                 "Numer wiersza>max"
         );
-        assertTrue(thrown.getMessage().contains("Wrong"));
+        assertTrue(thrown.getMessage().length()>0);
 
     }
 
@@ -166,7 +165,6 @@ public class SudokuBoardTest {
         SudokuSolver s = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(s);
         board.solveGame();
-        //System.out.println(board.get(0,0));
         board.set(0,0, 0);
         assertEquals(board.get(0,0),0);
 
@@ -192,7 +190,7 @@ public class SudokuBoardTest {
     /**
      * Testuje poprawność funkcji correct
      */
-    public  void correctTest() throws NoSuchMethodException, OutOfRangeException, InvocationTargetException, IllegalAccessException {
+    public  void correctTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         ArrayList<SudokuField> fields = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
             fields.add(i,new SudokuField(i));

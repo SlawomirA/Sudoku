@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import pl.sudokuboard.exception.CloneException;
 
 /**
  * Klasa bazowa dla Sudoku Row,Column,Box. Zawiera listę i metodę sprawdzania poprawności pola.
@@ -92,8 +93,13 @@ public class SudokuComponent implements Cloneable {
     }
 
     @Override
-    protected SudokuComponent clone() throws CloneNotSupportedException {
-        SudokuComponent element = (SudokuComponent) super.clone();
+    protected SudokuComponent clone() throws CloneException {
+        SudokuComponent element = null;
+        try {
+            element = (SudokuComponent) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new CloneException();
+        }
         element.fields = Arrays.asList(new SudokuField[size]);
         for (int i = 0; i < size; i++) {
             element.fields.set(i, new SudokuField(fields.get(i).getFieldValue()));

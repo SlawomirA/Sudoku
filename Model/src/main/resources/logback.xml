@@ -1,0 +1,25 @@
+<configuration>
+    # Console appender
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss} %p %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    # File appender
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        # Name of a log file
+        <file>target/logs/SudokuGame.log</file>
+        <append>false</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            # Pattern of log message for file appender
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %p %m%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

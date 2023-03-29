@@ -10,6 +10,11 @@ import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import pl.sudokuboard.exception.CloneException;
+import pl.sudokuboard.exception.FileOperationException;
+import pl.sudokuboard.exception.FileSaveException;
+import pl.sudokuboard.exception.InvalidIndex;
+import pl.sudokuboard.exception.NullCloneException;
 
 public class SudokuBoard implements PropertyChangeListener, Serializable, Cloneable {
     private int boxSize = 3;
@@ -29,12 +34,16 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
         }
     }
 
-    public SudokuBoard(SudokuBoard target) throws CloneNotSupportedException {
+    public SudokuBoard(SudokuBoard target) throws NullCloneException, CloneException {
         if (target == null) {
-            throw new CloneNotSupportedException();
+            throw new NullCloneException(this.getClass().toString());
         }
 
-        this.solver = target.solver.clone();
+        try {
+            this.solver = target.solver.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new CloneException();
+        }
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 board[i][j] = new SudokuField(target.board[i][j].getFieldValue());
@@ -45,9 +54,9 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
 
     /**
      *  Rozwiązuje board.
-     * @throws OutOfRangeException Wyjątek poza zakresem.
+     * @throws InvalidIndex Wyjątek poza zakresem.
      */
-    public void solveGame() throws OutOfRangeException {
+    public void solveGame() throws InvalidIndex {
         this.solver.solve(this);
         propertyChangeSupp.addPropertyChangeListener(this);
 
@@ -76,16 +85,14 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
      * @param col Index kolumny.
      * @param row Index wiersza.
      * @return Int, wartość z tego pola
-     * @throws OutOfRangeException Index kolumny bądź wiersza jest poza zakresem
+     * @throws InvalidIndex Index kolumny bądź wiersza jest poza zakresem
      */
-    public int get(int col, int row) throws OutOfRangeException {
+    public int get(int col, int row) throws InvalidIndex {
         if (col < 0 || col > boardSize) {
-            throw new OutOfRangeException("Wrong col value: " + col
-                    + ". Use values between 0 and " + boardSize + ".");
+            throw new InvalidIndex();
         }
         if (row < 0 || row > boardSize) {
-            throw new OutOfRangeException("Wrong row value: " + row
-                    + ". Use values between 0 and " + boardSize + ".");
+            throw new InvalidIndex();
         }
         return board[col][row].getFieldValue();
     }
@@ -164,9 +171,9 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
      * @param col Index kolumny.
      * @param row Index wiersza.
      * @param value Wartość pola.
-     * @throws OutOfRangeException Wyjątek poza zakresem.
+     * @throws InvalidIndex Wyjątek poza zakresem.
      */
-    public void set(int row, int col, int value) throws OutOfRangeException {
+    public void set(int row, int col, int value) throws InvalidIndex {
         board[row][col].setFieldValue(value);
     }
 
@@ -178,7 +185,7 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
      * @return True/False w zależności czy wartość jest poprawna w wierszu kolumnie i boxie 3x3.
      * @throws OutOfRangeException Wyjątek poza zakresem.
      */
-    public boolean correctNumber(int col, int row, int value) throws OutOfRangeException {
+    public boolean correctNumber(int col, int row, int value) {
         boolean result = correct(getCol(col), value);
         result &= correct(getRow(row), value);
         result &= correct(getBox(row, col), value);
@@ -270,18 +277,22 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
     }
 
 
-    public void save(String fileName) throws Exception {
+    public void save(String fileName) throws FileOperationException {
         SudokuBoardFactory<SudokuBoard> factory = new SudokuBoardDaoFactory();
-        try (
-                FileSudokuBoardDao dao = (FileSudokuBoardDao) factory.getFileDao(fileName);
-        ) {
+        try (FileSudokuBoardDao dao = (FileSudokuBoardDao) factory.getFileDao(fileName)) {
             dao.write(this);
+        } catch (FileOperationException e) {
+            throw new FileSaveException(e, fileName);
         }
     }
 
     @Override
-    protected SudokuBoard clone() throws CloneNotSupportedException {
-        return new SudokuBoard(this);
+    protected SudokuBoard clone() throws CloneException {
+        try {
+            return new SudokuBoard(this);
+        } catch (CloneNotSupportedException e) {
+            throw new CloneException();
+        }
     }
 
 
@@ -294,6 +305,10 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
             }
         }
         return true;
+    }
+
+    public void addFieldPropertyChangeEvent(int row, int col, PropertyChangeListener evt) {
+        board[row][col].getListener().addPropertyChangeListener(evt);
     }
 
     public static void main(String[] args) {

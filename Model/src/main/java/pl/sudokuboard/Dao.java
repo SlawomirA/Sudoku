@@ -1,6 +1,7 @@
 package pl.sudokuboard;
 
-import java.io.IOException;
+import pl.sudokuboard.exception.DaoException;
+import pl.sudokuboard.exception.WrongClassException;
 
 /**
  * Interfejs umożliwiający zapis i odczyt konkretnego obiektu klasy T.
@@ -11,17 +12,19 @@ public interface Dao<T> extends AutoCloseable {
     /**
      * Deserializuje obiekt.
      * @return Dana klasa.
-     * @throws IOException Input output exception
-     * @throws ClassNotFoundException Class is not found exception.
+     * @throws DaoException wyjatek
+     * @throws WrongClassException wyjatek
      */
-    T read() throws IOException, ClassNotFoundException;
+    T read() throws DaoException, WrongClassException;
+
+
 
     /**
      * Serializuje obiekt.
      * @param obj Dany obiekt do zapisania.
      * @return Prawda/Fałsz czy się udało
-     * @throws IOException Input output exception.
+     * @throws DaoException Input output exception.
      */
-    boolean write(T obj) throws IOException;
+    boolean write(T obj) throws DaoException;
 }
 //Abstract factory i FACTORY METHOD

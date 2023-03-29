@@ -13,5 +13,18 @@ public class SudokuBoardDaoFactory implements SudokuBoardFactory<SudokuBoard> {
     public Dao<SudokuBoard> getFileDao(final String fileName) {
         return new FileSudokuBoardDao(fileName);
     }
+
+    public Dao<SudokuBoard> getJdbcDao(final String boardName) {
+        return getJdbcDao(boardName, "", false);
+    }
+
+    public Dao<SudokuBoard> getJdbcDao(final String boardName, final String parentName) {
+        return getJdbcDao(boardName, parentName, false);
+    }
+
+    public Dao<SudokuBoard> getJdbcDao(final String boardName,
+                                       final String parentName, Boolean inMemory) {
+        return new JdbcSudokuBoardDao(boardName, parentName, inMemory);
+    }
 }
 //Fabryka abstrakcyjna i metoda wytwórcza różnica

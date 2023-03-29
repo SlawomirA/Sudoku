@@ -1,7 +1,102 @@
+#pane {
+    -fx-background-image: url("back.jpg");
+}
+
+#gameStartButton {
+    -fx-background-color: #85c1c9;
+    -fx-cursor: pointer;
+    -fx-border-width: 2px;
+    -fx-border-color: #33818a;
+}
+
+#gameStartButton:hover {
+    -fx-background-color: #1eb2c7;
+    -fx-cursor: pointer;
+    -fx-border-width: 4px;
+    -fx-border-color: #33818a;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+}
+
 #title {
-    -fx-font: 40px Tahoma;
+    -fx-font: 40px Bahnschrift;
     -fx-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, aqua 0%, red 50%);
     -fx-stroke: red;
     -fx-stroke-width: 5px;
     -fx-alignment: center;
+
+    -fx-background-color: brown;
+    -fx-background-radius: 20px;
+
+    -fx-border-width: 5px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #6b0303;
+}
+
+#title:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+}
+
+#diff_group,
+#restoreBoardButton,
+#saveBoardButton,
+#loadBoardButton
+{
+    -fx-background-color: brown;
+    -fx-background-radius: 10px;
+
+    -fx-border-width: 5px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #6b0303;
+
+    -fx-start-padding: 10 10 10 10;
+}
+
+#diff_group:hover,
+#restoreBoardButton:hover,
+#saveBoardButton:hover,
+#loadBoardButton:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+}
+
+#optionPane {
+    -fx-background-color: brown;
+    -fx-background-radius: 20px;
+
+    -fx-border-width: 5px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #6b0303;
+
+    -fx-start-margin: 10px;
+}
+
+
+.combo-box{
+    -fx-background-color: #239184;
+}
+
+.combo-box .list-cell{
+    -fx-background-color: #b3d2b4;
+}
+
+.combo-box .list-cell:hover{
+    -fx-background-color: #7ed080;
+}
+
+.combo-box .list-cell:selected{
+    -fx-background-color: #afeeb1;
+}
+
+/* gra */
+
+#sudokuBoardViewBackground {
+    -fx-background-image: url("backgame.jpg");
+}
+
+#saveBoardButton,
+#restoreBoardButton,
+#loadBoardButton {
+    -fx-background-color: #85c1c9;
+    -fx-cursor: pointer;
+    -fx-border-width: 2px;
+    -fx-border-color: #33818a;
 }

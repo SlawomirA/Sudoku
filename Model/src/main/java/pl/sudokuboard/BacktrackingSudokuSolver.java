@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import pl.sudokuboard.exception.CloneException;
+import pl.sudokuboard.exception.InvalidIndex;
 
 /**
  * Klasa odpowiadająca za rozwiązanie sudoku algorytmem z użyciem backtrackingu.
@@ -21,7 +23,7 @@ public class BacktrackingSudokuSolver implements SudokuSolver, Cloneable {
      * po pewnej skończonej liczbie kroków czyści go.
      * @throws OutOfRangeException Oznacza, że index wiersza jest poza zakresem.
      */
-    public void solve(SudokuBoard board) throws OutOfRangeException {
+    public void solve(SudokuBoard board) throws InvalidIndex {
         for (int row = 0; row < board.getBoardSize(); row++) {
             int failures = 0;
             while (!solveRow(board, row)) {
@@ -42,7 +44,7 @@ public class BacktrackingSudokuSolver implements SudokuSolver, Cloneable {
      * @param board Board do wyczyszczenia.
      * @param row   Index wiersza
      */
-    private void cleanRow(SudokuBoard board, int row) throws OutOfRangeException {
+    private void cleanRow(SudokuBoard board, int row) throws InvalidIndex {
         for (int i = 0; i < board.getBoardSize();i++) {
             board.set(row, i, 0);
         }
@@ -54,7 +56,7 @@ public class BacktrackingSudokuSolver implements SudokuSolver, Cloneable {
      * @return True/False w zależności czy udało się rozwiązać
      *      wiersz w pewnej skończonej liczbie kroków.
      */
-    private boolean solveRow(SudokuBoard board, int row) throws OutOfRangeException {
+    private boolean solveRow(SudokuBoard board, int row) throws InvalidIndex {
         List<Integer> currentNumbers = generateNumbers();
 
         for (int col = 0; col < board.getBoardSize(); col++) {
@@ -119,7 +121,11 @@ public class BacktrackingSudokuSolver implements SudokuSolver, Cloneable {
     }
 
     @Override
-    public BacktrackingSudokuSolver clone() throws CloneNotSupportedException {
-        return (BacktrackingSudokuSolver) super.clone();
+    public BacktrackingSudokuSolver clone() throws CloneException {
+        try {
+            return (BacktrackingSudokuSolver) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

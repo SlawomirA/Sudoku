@@ -6,6 +6,7 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import pl.sudokuboard.exception.CloneException;
 
 /**
  * Klasa odzwierciedlająca wartość pojedynczego pola.
@@ -99,12 +100,16 @@ public class SudokuField implements Serializable,Cloneable, Comparable<SudokuFie
     }
 
     @Override
-    public SudokuField clone() throws CloneNotSupportedException {
-        return (SudokuField) super.clone();
+    public SudokuField clone() throws CloneException {
+        try {
+            return (SudokuField) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new CloneException();
+        }
     }
 
     @Override
-    public int compareTo(SudokuField o) throws NullPointerException {
+    public int compareTo(SudokuField o) {
         if (o == null) {
             throw new NullPointerException();
         }

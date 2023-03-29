@@ -1,0 +1,26 @@
+----------------------------------------------------------------
+Thu Dec 22 15:29:35 CET 2022:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance a816c00e-0185-3a3d-50ac-00001d8b5928 
+on database directory memory:C:\Users\Admin\Desktop\123\startowy11 - 2\Model\Database\SudokuGame with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@266474c2 
+Loaded from file:/D:/Programowanie/RepozytoriumMaven/org/apache/derby/derby/10.15.2.0/derby-10.15.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=17.0.5+9-LTS-191
+user.dir=C:\Users\Admin\Desktop\123\startowy11 - 2\Model
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Thu Dec 22 15:29:36 CET 2022:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): instance 7337412a-0185-3a3d-50ac-00001d8b5928 
+on database directory C:\Users\Admin\Desktop\123\startowy11 - 2\Model\Database\SudokuGame with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@266474c2 
+Loaded from file:/D:/Programowanie/RepozytoriumMaven/org/apache/derby/derby/10.15.2.0/derby-10.15.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=17.0.5+9-LTS-191
+user.dir=C:\Users\Admin\Desktop\123\startowy11 - 2\Model
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

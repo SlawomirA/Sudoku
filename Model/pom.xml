@@ -70,6 +70,16 @@
             <version>3.12.0</version>
             <!--Uses Apache 2.0 License: http://www.apache.org/licenses/LICENSE-2.0.html -->
         </dependency>
+        <dependency>
+            <groupId>ch.qos.cal10n</groupId>
+            <artifactId>cal10n-api</artifactId>
+            <version>0.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.15.2.0</version>
+        </dependency>
     </dependencies>
 
     <properties>

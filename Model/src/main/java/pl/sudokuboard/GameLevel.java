@@ -1,12 +1,13 @@
 package pl.sudokuboard;
 
 import java.util.Random;
+import pl.sudokuboard.exception.InvalidIndex;
 
 public class GameLevel {
 
 
     public static void setLevel(SudokuBoard board, GameDifficultyLevel level)
-            throws OutOfRangeException {
+            throws InvalidIndex {
         if (!board.isSolved()) {
             board.solveGame();
         }
@@ -22,7 +23,7 @@ public class GameLevel {
         }
     }
 
-    private static void eraseFields(SudokuBoard board, int amount) throws OutOfRangeException {
+    private static void eraseFields(SudokuBoard board, int amount) throws InvalidIndex {
         Random rand = new Random();
         int row = rand.nextInt(0, 9);
         int col = rand.nextInt(0, 9);

@@ -1,6 +1,8 @@
 package pl.sudokuboard;
 
 import java.util.List;
+import pl.sudokuboard.exception.CloneException;
+
 
 /**
  * Klasa będąca odzwierciedleniem kwadratu, korzysta z klasy bazowej Component.
@@ -11,7 +13,7 @@ public class SudokuBox extends SudokuComponent {
     }
 
     @Override
-    protected SudokuBox clone() throws CloneNotSupportedException {
+    protected SudokuBox clone() throws CloneException {
         return (SudokuBox) super.clone();
     }
 }
